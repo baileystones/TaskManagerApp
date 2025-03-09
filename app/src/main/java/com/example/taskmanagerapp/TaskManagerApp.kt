@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.taskmanagerapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.TaskManagerApp.ui.theme.MyApplicationTheme
 
 //Task data class
 data class Task(val id: Int, val description: String, var isCompleted: Boolean = false)
@@ -60,14 +59,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TaskManagerAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     TaskManagerScreen(
                         modifier = Modifier.padding(innerPadding),
                         taskManager = taskManager
                     )
                 }
-            }
         }
     }
 }
@@ -159,7 +156,5 @@ fun TaskManagerScreen(modifier: Modifier = Modifier, taskManager: TaskManager) {
 @Preview(showBackground = true)
 @Composable
 fun TaskManagerScreenPreview() {
-    TaskManagerAppTheme {
-        TaskManagerScreen(taskManager = TaskManager())
-    }
+    TaskManagerScreen(taskManager = TaskManager())
 }
