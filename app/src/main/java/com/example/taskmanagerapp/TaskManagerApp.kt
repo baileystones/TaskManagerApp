@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.TaskManagerApp.ui.theme.MyApplicationTheme
 
 //Task data class
 data class Task(val id: Int, val description: String, var isCompleted: Boolean = false)
@@ -28,14 +28,9 @@ class TaskManager {
 
     //Removing a task based off ID
     fun removeTask(id: Int) {
-        val taskToRemove = tasks.find { it.id == id }
-        taskToRemove?.let {
-            tasks.remove(it)
-            tasks.forEachIndexed { index, task ->
-                tasks[index] = task.copy(id = index + 1)
-            }
-        }
+        tasks.removeAll { it.id == id }
     }
+
     //Checking a task off
     fun checkOffTask(id: Int) {
         val taskToCheck = tasks.find { it.id == id }
@@ -43,6 +38,7 @@ class TaskManager {
             it.isCompleted = true
         }
     }
+
     //Returning task list as a string
     fun getTasksText(): String {
         return if (tasks.isEmpty()) {
@@ -55,6 +51,7 @@ class TaskManager {
         }
     }
 }
+
 //User interface setup
 class MainActivity : ComponentActivity() {
     private val taskManager = TaskManager()
@@ -63,7 +60,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyApplicationTheme {
+            TaskManagerAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     TaskManagerScreen(
                         modifier = Modifier.padding(innerPadding),
@@ -74,6 +71,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 //Display task manager UI
 @Composable
 fun TaskManagerScreen(modifier: Modifier = Modifier, taskManager: TaskManager) {
@@ -83,6 +81,7 @@ fun TaskManagerScreen(modifier: Modifier = Modifier, taskManager: TaskManager) {
 
     Column(modifier = modifier.padding(16.dp)) {
 
+        // Task description input
         TextField(
             value = taskDescription,
             onValueChange = { taskDescription = it },
@@ -92,6 +91,7 @@ fun TaskManagerScreen(modifier: Modifier = Modifier, taskManager: TaskManager) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Add Task button
         Button(
             onClick = {
                 if (taskDescription.text.isNotEmpty()) {
@@ -107,6 +107,7 @@ fun TaskManagerScreen(modifier: Modifier = Modifier, taskManager: TaskManager) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Task ID input
         TextField(
             value = taskId,
             onValueChange = { taskId = it },
@@ -116,6 +117,7 @@ fun TaskManagerScreen(modifier: Modifier = Modifier, taskManager: TaskManager) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Remove Task button
         Button(
             onClick = {
                 taskId.text.toIntOrNull()?.let {
@@ -130,6 +132,7 @@ fun TaskManagerScreen(modifier: Modifier = Modifier, taskManager: TaskManager) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Check off Task button
         Button(
             onClick = {
                 taskId.text.toIntOrNull()?.let {
@@ -144,18 +147,19 @@ fun TaskManagerScreen(modifier: Modifier = Modifier, taskManager: TaskManager) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        //Displaying task list
+        // Displaying task list
         Text(
             text = tasksText,
             modifier = Modifier.fillMaxWidth()
         )
     }
 }
+
 //Previewing task manager screen
 @Preview(showBackground = true)
 @Composable
 fun TaskManagerScreenPreview() {
-    MyApplicationTheme {
+    TaskManagerAppTheme {
         TaskManagerScreen(taskManager = TaskManager())
     }
 }
